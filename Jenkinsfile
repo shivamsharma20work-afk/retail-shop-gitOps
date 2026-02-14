@@ -10,11 +10,13 @@ pipeline{
         stage('Build backend') {
             steps{
                 echo 'Building the backend code'
+                sh 'docker build -t retail-backend ./backend'
             }
         }
         stage('Build frontend') {
             steps{
                 echo 'Building the frontend code'
+                sh 'docker build -t retail-frontend ./frontend'
             }
         }
         stage('Test') {
