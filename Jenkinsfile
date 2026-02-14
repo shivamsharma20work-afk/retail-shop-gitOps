@@ -27,6 +27,8 @@ pipeline{
         stage('Deploy') {
             steps{
                 echo 'Deploying the code'
+                sh 'docker run -d -p 5000:5000 retail-backend'
+                sh 'docker run -d -p 80:80 retail-frontend'
             }
         }
     }
