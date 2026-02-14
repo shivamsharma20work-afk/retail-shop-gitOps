@@ -28,6 +28,7 @@ pipeline{
             steps{
                 sh 'docker rm -f mongo backend frontend'
                 sh 'docker run -d --name mongo --network retail-net mongo:latest'
+                sh 'sleep 20'
                 sh 'docker run -d --name backend --network retail-net -p 5000:5000 retail-backend'
                 sh 'docker run -d --name frontend -p 80:80 retail-frontend'
             }
