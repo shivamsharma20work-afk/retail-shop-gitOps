@@ -26,9 +26,10 @@ pipeline{
         }
         stage('Deploy') {
             steps{
-                echo 'Deploying the code'
-                sh 'docker run -d -p 5000:5000 retail-backend'
-                sh 'docker run -d -p 80:80 retail-frontend'
+    
+                sh 'docker run -d --name mongo --network retail-net mongo:latest'
+                sh 'docker run -d --name backend --network retail-net -p 5000:5000 retail-backend'
+                sh 'docker run -d --name frontend -p 80:80 retail-frontend'
             }
         }
     }
