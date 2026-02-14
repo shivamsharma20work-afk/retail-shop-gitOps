@@ -10,7 +10,7 @@ app.use(express.json());
 
 // --- 1. MongoDB Connection Setup ---
 // Agar local MongoDB hai toh 127.0.0.1 use karna best hai
-const MONGO_URI = process.env.MONGO_URL || "mongodb://mongo:27017/bhaizon"; 
+const MONGO_URI = process.env.MONGO_URL || "mongodb://mongo:27017"; 
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB Connect Ho Gaya Bhai! 🚀'))
