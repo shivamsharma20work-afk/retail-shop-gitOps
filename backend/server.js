@@ -13,7 +13,15 @@ app.use(express.json());
 const MONGO_URI = process.env.MONGO_URL || "mongodb://mongo:27017"; 
 
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB Connect Ho Gaya Bhai! 🚀'))
+  .then(() => {
+    console.log('MongoDB Connect Ho Gaya Bhai! 🚀');
+
+    const PORT = 5000;
+    app.listen(PORT, () => {
+    console.log(`Backend server running on http://localhost:${PORT} 🔥`);
+    });
+  })
+
   .catch((err) => {
     console.error('Database connection error:', err.message);
     console.log('Bhai, check kar MongoDB Compass ya service chalu hai?');
@@ -76,7 +84,3 @@ app.get('/api/products', (req, res) => {
 });
 
 // --- 4. Start Server ---
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT} 🔥`);
-});
