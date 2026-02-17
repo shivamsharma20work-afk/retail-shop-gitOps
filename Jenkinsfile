@@ -20,7 +20,7 @@ pipeline {
                 sh 'docker build -t retail-frontend ./frontend'
             }
         }
-        stage('Deploying to Docker Hub') {
+        stage('Pushing to Docker Hub') {
             steps{
                 echo 'Pushing this Image to Docker Hub'
                 withCredentials([usernamePassword('credentialsId': "dockerHubCred" ,
@@ -36,8 +36,7 @@ pipeline {
         }
         stage('Deploy') {
             steps{
-                sh 'docker run -d --name backend  -p 5000:5000 retail-backend'
-                sh 'docker run -d --name frontend -p 80:80 retail-frontend'
+               sh 'docker compose up '
             }
         }
     }
