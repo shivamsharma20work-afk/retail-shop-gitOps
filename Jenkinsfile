@@ -1,4 +1,4 @@
-pipeline{
+pipeline 
     agent any
 
     stages{
@@ -20,9 +20,17 @@ pipeline{
                 sh 'docker build -t retail-frontend ./frontend'
             }
         }
-        stage('Test') {
+        stage('Deploying to Docker Hub') {
             steps{
-                echo 'Testing the code'
+                echo 'Pushing this Image to Docker Hub'
+                withCredentials([usernamePassword('credentialsId': "dockerHubCred" ,
+                passwordVariable:"dockerHubPass",
+                usernameVariable:"dockerHubUser")]){
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                sh 'docker image tag retail-backend shivam011/retail-backend'
+                sh 'docker image tag retail-frontend shivam011/retail-frontend'
+                sh 'docker push ${dockerHubUser}/retail-backend'
+                sh 'docker push ${dockerHubUser}/retail-frontend'
             }
         }
         stage('Deploy') {
