@@ -9,6 +9,7 @@ pipeline{
         }
         stage('Build backend') {
             steps{
+                sh 'whoami'
                 echo 'Building the backend code'
                 sh 'docker build -t retail-backend ./backend'
             }
