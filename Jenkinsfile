@@ -31,6 +31,7 @@ pipeline {
                 sh 'docker image tag retail-frontend shivam011/retail-frontend'
                 sh 'docker push ${dockerHubUser}/retail-backend'
                 sh 'docker push ${dockerHubUser}/retail-frontend'
+                }
             }
         }
         stage('Deploy') {
@@ -42,4 +43,3 @@ pipeline {
     }
 }
 
-}
