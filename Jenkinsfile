@@ -12,6 +12,15 @@ pipeline {
                 git url:"https://github.com/shivamsharma20work-afk/retail-shop-gitOps", branch: "main"
             }
         }
+        stage('Terraform Plan') {
+            steps {
+                dir('terraform') {
+                    echo 'Bhai, AWS Infrastructure check ho raha hai... ☁️'
+                    sh 'terraform init'
+                    sh 'terraform plan' 
+                }
+            }
+        }
         stage('Build backend') {
             steps{
                 sh 'whoami'
