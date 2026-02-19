@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        BACKEND_IMAGE = "shivam011/retail-backend"
+        FRONTEND_IMAGE = "shivam011/retail-frontend"
+    }
+
     stages{
         stage('Code') {
             steps{
@@ -11,13 +16,13 @@ pipeline {
             steps{
                 sh 'whoami'
                 echo 'Building the backend code'
-                sh 'docker build -t retail-backend ./backend'
+                sh 'docker build -t ${BACKEND_IMAGE} ./backend'
             }
         }
         stage('Build frontend') {
             steps{
                 echo 'Building the frontend code'
-                sh 'docker build -t retail-frontend ./frontend'
+                sh 'docker build -t ${FRONTEND_IMAGE} ./frontend'
             }
         }
         stage('Pushing to Docker Hub') {
@@ -34,11 +39,21 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        stage('Cleanup') {
             steps{
-               sh 'docker compose up '
+               sh "docker rmi ${BACKEND_IMAGE}:latest ${FRONTEND_IMAGE}:latest || true"
             }
         }
     }
+
+    post {
+        success {
+            echo 'Docker Images Pushed to Docker Hub Successfully'
+        }
+        failure {
+            echo 'Error'
+        }
+    }
 }
+
 
