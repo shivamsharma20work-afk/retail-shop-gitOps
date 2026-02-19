@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     // Backend se connect karne ki koshish
-    fetch('http://localhost:5000/api/products')
+    fetch('http://backend-service:5000/api/products')
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => {

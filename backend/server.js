@@ -47,6 +47,6 @@ app.get('/api/products', (req, res) => {
 
 // --- Start Server ---
 const PORT = 5000;
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0', () => {
   console.log(`🚀 Backend bina MongoDB ke mast chal raha hai on port ${PORT}`);
 });
