@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata: 
   name: backend-deployment 
-  namespace: backend-ns 
+  namespace: cloudcart
 spec: 
   replicas: 1
   selector:

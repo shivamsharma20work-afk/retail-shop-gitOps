@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: frontend-service 
-  namespace: frontend-ns
+  namespace: cloudcart
 spec:
   selector:
     apps: frontend
