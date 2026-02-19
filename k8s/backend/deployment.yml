@@ -1,0 +1,20 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: backend-deployment 
+  namespace: backend-ns 
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:   
+        app: backend
+    spec: 
+      containers:
+        - name: backend-pod
+          image: shivam011/retail-backend:latest
+          ports:
+          - containerPort: 5000

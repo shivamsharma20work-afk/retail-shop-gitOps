@@ -1,0 +1,21 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: frontend-deployment 
+  namespace: frontend-ns 
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      apps: frontend
+  template:
+    metadata: 
+      name: frontend-pod
+      labels:
+        apps: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: shivam011/retail-frontend
+        ports: 
+        - containerPort: 80
