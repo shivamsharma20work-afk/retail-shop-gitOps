@@ -25,10 +25,3 @@ spec:
               value: mongodb://mongo:27017/ecommerce
             - name: JWT_SECRET
               value: supersecret
-          livenessprobe:
-            httpGet:
-              path: /health
-              port: 5001
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            
