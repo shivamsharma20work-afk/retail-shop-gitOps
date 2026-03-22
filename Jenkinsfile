@@ -108,6 +108,7 @@ pipeline {
                 kubectl get svc -n retail-app
                 kubectl get hpa -n retail-app
                 '''
+                }
             }
         }
     }
