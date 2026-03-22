@@ -61,15 +61,43 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                    kubectl apply -f k8s/namespace.yml
-                    kubectl apply -f k8s/secrets.yml
+                withCredentials([string(credentialsId: 'k8s-token', variable: 'K8S_TOKEN')]) {
+                    sh '''
+                    kubectl \
+                        --server=https://192.168.49.2:8443 \
+                        --token=$K8S_TOKEN \
+                        --insecure-skip-tls-verify=true \
+                        apply -f k8s/namespace.yml
 
-                    kubectl apply -f k8s/backend-k8s/
-                    kubectl apply -f k8s/frontend-k8s/
+                    kubectl \
+                        --server=https://192.168.49.2:8443 \
+                        --token=$K8S_TOKEN \
+                        --insecure-skip-tls-verify=true \
+                        apply -f k8s/secrets.yml
 
-                    kubectl apply -f k8s/ingress.yml
-                    kubectl apply -f k8s/hpa.yml 
+                    kubectl \
+                        --server=https://192.168.49.2:8443 \
+                        --token=$K8S_TOKEN \
+                        --insecure-skip-tls-verify=true \
+                        apply -f k8s/backend-k8s/
+
+                    kubectl \
+                        --server=https://192.168.49.2:8443 \
+                        --token=$K8S_TOKEN \
+                        --insecure-skip-tls-verify=true \
+                        apply -f k8s/frontend-k8s/
+
+                            kubectl \
+                        --server=https://192.168.49.2:8443 \
+                        --token=$K8S_TOKEN \
+                        --insecure-skip-tls-verify=true \
+                        apply -f k8s/ingress.yml
+
+                    kubectl \
+                        --server=https://192.168.49.2:8443 \
+                        --token=$K8S_TOKEN \
+                        --insecure-skip-tls-verify=true \
+                        apply -f k8s/hpa.yml
                     '''
             }
         }
