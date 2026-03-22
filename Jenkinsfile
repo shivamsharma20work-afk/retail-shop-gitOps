@@ -5,6 +5,7 @@ pipeline {
         AWS_REGION= "ap-south-1"
         ACCOUNT_ID= "288096932508"
         REPO_NAME= "dockerimage-repo"
+        TAG = "latest"
 
         IMAGE_BACKEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:backend"
         IMAGE_FRONTEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend"
@@ -35,6 +36,13 @@ pipeline {
                 sh 'docker tag retail-frontend ${IMAGE_FRONTEND}'
                 sh 'docker push ${IMAGE_BACKEND}'
                 sh 'docker push ${IMAGE_FRONTEND}'
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    kubectl apply -f k8s/namespace.yml
+                    kubectl apply -f 
             }
         }
     }
