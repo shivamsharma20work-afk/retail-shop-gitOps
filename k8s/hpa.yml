@@ -1,7 +1,7 @@
-kind: HorizontalPodAutoscaler
 apiVersion: autoscaling/v2
-metadata:   
-  name: frontend-hpa 
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
   namespace: retail-app
 spec:
   scaleTargetRef:
@@ -12,7 +12,7 @@ spec:
   maxReplicas: 10
   metrics:
     - type: Resource
-      resource: 
+      resource:
         name: cpu
         target:
           type: Utilization
