@@ -1,0 +1,22 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: frontend-deployment
+  namespace: retail-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:
+      - name: my-secret
+      containers:
+      - name: frontend
+        image: 288096932508.dkr.ecr.ap-south-1.amazonaws.com/dockerimage-repo:frontend
+        ports:
+        - containerPort: 80
