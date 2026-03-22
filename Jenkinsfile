@@ -6,9 +6,13 @@ pipeline {
         ACCOUNT_ID= "288096932508"
         REPO_NAME= "dockerimage-repo"
         TAG = "latest"
+        BUILD_TAG = "${BUILD_NUMBER}"
 
-        IMAGE_BACKEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:backend"
-        IMAGE_FRONTEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend"
+        IMAGE_BACKEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:backend-${BUILD_TAG}"
+        IMAGE_FRONTEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend-${BUILD_TAG}"
+
+        IMAGE_BACKEND_LATEST= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:backend-latest"
+        IMAGE_FRONTEND_LATEST= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend-latest"  
     }
 
     stages{   
@@ -30,19 +34,59 @@ pipeline {
                 }
             }        
         }
-        stage('Push Docker Image to ECR') {
+        stage('Tag & Push Images') {
             steps {
-                sh 'docker tag retail-backend ${IMAGE_BACKEND}'
-                sh 'docker tag retail-frontend ${IMAGE_FRONTEND}'
-                sh 'docker push ${IMAGE_BACKEND}'
-                sh 'docker push ${IMAGE_FRONTEND}'
+                sh '''
+                # Backend tagging
+                docker tag retail-backend $IMAGE_BACKEND
+                docker tag retail-backend $IMAGE_BACKEND_LATEST
+
+                # Frontend tagging
+                docker tag retail-frontend $IMAGE_FRONTEND
+                docker tag retail-frontend $IMAGE_FRONTEND_LATEST
+
+                # Push Backend
+                docker push $IMAGE_BACKEND
+                docker push $IMAGE_BACKEND_LATEST
+
+                # Push Frontend
+                docker push $IMAGE_FRONTEND
+                docker push $IMAGE_FRONTEND_LATEST
+                '''
+            }
+        }
+        stage('Update K8s Deployment Files') {
+            steps{
+                sh '''
+                # Replace image in Frontend Deployment
+                sed -i "s|image:.*frontend.*|image : $IMAGE_FRONTEND|g" k8s/frontend-k8s/deployment.yml
+
+                # Replace image in Backend Deployment
+                sed -i "s|image:.*backend.*|image : $IMAGE_BACKEND|g" k8s/backend-k8s/deployment.yml
+                '''
             }
         }
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
                     kubectl apply -f k8s/namespace.yml
-                    kubectl apply -f 
+                    kubectl apply -f k8s/secrets.yml
+
+                    kubectl apply -f k8s/backend-k8s/
+                    kubectl apply -f k8s/frontend-k8s/
+
+                    kubectl apply -f k8s/ingress.yml
+                    kubectl apply -f k8s/hpa.yml 
+                    '''
+            }
+        }
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                kubectl get pods -n retail-app
+                kubectl get svc -n retail-app
+                kubectl get hpa -n retail-app
+                '''
             }
         }
     }
