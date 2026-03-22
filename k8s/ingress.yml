@@ -9,14 +9,14 @@ spec:
       http:
         paths:
           - path: /
-            pathType: prefix
+            pathType: Prefix
             backend: 
               service:
                 name: frontend-service
                 port: 
                   number: 80
           - path: /api
-            pathType: prefix
+            pathType: Prefix
             backend:  
               service:
                 name: backend
