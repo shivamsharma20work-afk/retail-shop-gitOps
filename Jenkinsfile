@@ -10,9 +10,6 @@ pipeline {
 
         IMAGE_BACKEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:backend-${BUILD_TAG}"
         IMAGE_FRONTEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend-${BUILD_TAG}"
-
-        IMAGE_BACKEND_LATEST= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:backend-latest"
-        IMAGE_FRONTEND_LATEST= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend-latest"  
     }
 
     stages{   
@@ -39,19 +36,15 @@ pipeline {
                 sh '''
                 # Backend tagging
                 docker tag retail-backend $IMAGE_BACKEND
-                docker tag retail-backend $IMAGE_BACKEND_LATEST
 
                 # Frontend tagging
                 docker tag retail-frontend $IMAGE_FRONTEND
-                docker tag retail-frontend $IMAGE_FRONTEND_LATEST
 
                 # Push Backend
                 docker push $IMAGE_BACKEND
-                docker push $IMAGE_BACKEND_LATEST
 
                 # Push Frontend
                 docker push $IMAGE_FRONTEND
-                docker push $IMAGE_FRONTEND_LATEST
                 '''
             }
         }
