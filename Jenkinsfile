@@ -10,12 +10,7 @@ pipeline {
         IMAGE_FRONTEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend"
     }
 
-    stages{
-        stage('Checkout Code') {
-             steps {
-                git 'https://github.com/shivamsharma20work-afk/retail-shop-gitOps.git'
-            }
-        }   
+    stages{   
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t retail-backend ./backend'
