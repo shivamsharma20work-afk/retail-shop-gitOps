@@ -88,13 +88,13 @@ pipeline {
                         apply -f k8s/frontend-k8s/
 
                     kubectl \
-                        --server=K8S_SERVER \
+                        --server=$K8S_SERVER \
                         --token=$K8S_TOKEN \
                         --insecure-skip-tls-verify=true \
                         apply -f k8s/ingress.yml
 
                     kubectl \
-                        --server=K8S_SERVER \
+                        --server=$K8S_SERVER \
                         --token=$K8S_TOKEN \
                         --insecure-skip-tls-verify=true \
                         apply -f k8s/hpa.yml
