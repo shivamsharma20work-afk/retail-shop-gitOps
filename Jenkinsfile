@@ -99,6 +99,7 @@ pipeline {
                         --insecure-skip-tls-verify=true \
                         apply -f k8s/hpa.yml
                     '''
+                }
             }
         }
         stage('Verify Deployment') {
@@ -109,7 +110,6 @@ pipeline {
                     kubectl --server=$K8S_SERVER --token=$K8S_TOKEN --insecure-skip-tls-verify=true get svc -n retail-app
                     kubectl --server=$K8S_SERVER --token=$K8S_TOKEN --insecure-skip-tls-verify=true get hpa -n retail-app
                     '''
-                    }
                 }
             }
         }
