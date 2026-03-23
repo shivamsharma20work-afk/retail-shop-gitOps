@@ -10,7 +10,6 @@ pipeline {
         IMAGE_BACKEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:backend-${BUILD_TAG}"
         IMAGE_FRONTEND= "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:frontend-${BUILD_TAG}"
 
-        K8S_SERVER= "https://192.168.49.2:8443"
     }
 
     stages{   
@@ -48,69 +47,34 @@ pipeline {
                 '''
             }
         }
-        stage('Update K8s Deployment Files') {
+        stage('Update GitOps Repo') {
             steps{
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_PASS'
+                )]) {
                 sh '''
-                # Replace image in Frontend Deployment
                 sed -i "s|image:.*frontend.*|image : $IMAGE_FRONTEND|g" k8s/frontend-k8s/deployment.yml
-
-                # Replace image in Backend Deployment
                 sed -i "s|image:.*backend.*|image : $IMAGE_BACKEND|g" k8s/backend-k8s/deployment.yml
+
+                git config user.name "jenkins"
+                git config user.email "jenkins@example.com"
+
+                git add.
+                git commit -m "Update images to build ${BUILD_NUMBER}"
+
+                git push https://${GIT_USER}:${GIT_PASS}@github.com/shivamsharma20work-afk/retail-shop-gitops.git HEAD:main 
                 '''
-            }
-        }
-        stage('Deploy to Kubernetes') {
-            steps {
-                withCredentials([string(credentialsId: 'k8s-token', variable: 'K8S_TOKEN')]) {
-                    sh '''
-                    kubectl \
-                        --server=$K8S_SERVER \
-                        --token=$K8S_TOKEN \
-                        --insecure-skip-tls-verify=true \
-                        apply -f k8s/namespace.yml
-
-                    kubectl \
-                        --server=$K8S_SERVER \
-                        --token=$K8S_TOKEN \
-                        --insecure-skip-tls-verify=true \
-                        apply -f k8s/secrets.yml
-
-                    kubectl \
-                        --server=$K8S_SERVER \
-                        --token=$K8S_TOKEN \
-                        --insecure-skip-tls-verify=true \
-                        apply -f k8s/backend-k8s/
-
-                    kubectl \
-                        --server=$K8S_SERVER \
-                        --token=$K8S_TOKEN \
-                        --insecure-skip-tls-verify=true \
-                        apply -f k8s/frontend-k8s/
-
-                    kubectl \
-                        --server=$K8S_SERVER \
-                        --token=$K8S_TOKEN \
-                        --insecure-skip-tls-verify=true \
-                        apply -f k8s/ingress.yml
-
-                    kubectl \
-                        --server=$K8S_SERVER \
-                        --token=$K8S_TOKEN \
-                        --insecure-skip-tls-verify=true \
-                        apply -f k8s/hpa.yml
-                    '''
                 }
+
             }
         }
         stage('Verify Deployment') {
             steps {
-                withCredentials([string(credentialsId: 'k8s-token', variable: 'K8S_TOKEN')]) {
                     sh '''
-                    kubectl --server=$K8S_SERVER --token=$K8S_TOKEN --insecure-skip-tls-verify=true get pods -n retail-app
-                    kubectl --server=$K8S_SERVER --token=$K8S_TOKEN --insecure-skip-tls-verify=true get svc -n retail-app
-                    kubectl --server=$K8S_SERVER --token=$K8S_TOKEN --insecure-skip-tls-verify=true get hpa -n retail-app
+                    echo "Deployment triggered via ArgoCD
                     '''
-                }
             }
         }
     }
