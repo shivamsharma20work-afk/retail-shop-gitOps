@@ -61,7 +61,7 @@ pipeline {
                 git config user.name "jenkins"
                 git config user.email "jenkins@example.com"
 
-                git add.
+                git add .
                 git commit -m "Update images to build ${BUILD_NUMBER}"
 
                 git push https://${GIT_USER}:${GIT_PASS}@github.com/shivamsharma20work-afk/retail-shop-gitops.git HEAD:main 
