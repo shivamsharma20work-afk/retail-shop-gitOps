@@ -8,3 +8,5 @@ resources:
   - backend-k8s/service.yml
   - ingress.yml
   - hpa.yml
+  - jenkins-sa.yml
+  - jenkins-rolebinding.yml
