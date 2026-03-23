@@ -1,12 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 resources:
   - namespace.yml
-  - app.yml
   - secrets.yml
-  - frontend-k8s/deployment.yml
-  - frontend-k8s/service.yml
-  - backend-k8s/deployment.yml
-  - backend-k8s/service.yml
-  - ingress.yml
-  - hpa.yml
   - jenkins-sa.yml
   - jenkins-rolebinding.yml
+
+  - backend-k8s/deployment.yml
+  - backend-k8s/service.yml
+  - frontend-k8s/deployment.yml
+  - frontend-k8s/service.yml
+
+  - configMap.yml
+  - ingress.yml
+  - hpa.yml
