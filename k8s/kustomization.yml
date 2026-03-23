@@ -1,0 +1,10 @@
+resources:
+  - namespace.yml
+  - app.yml
+  - secret.yml
+  - frontend-k8s/deployment.yml
+  - frontend-k8s/service.yml
+  - backend-k8s/deployment.yml
+  - backend-k8s/service.yml
+  - ingress.yml
+  - hpa.yml
