@@ -1,7 +1,7 @@
 resources:
   - namespace.yml
   - app.yml
-  - secret.yml
+  - secrets.yml
   - frontend-k8s/deployment.yml
   - frontend-k8s/service.yml
   - backend-k8s/deployment.yml
