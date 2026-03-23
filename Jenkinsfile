@@ -73,7 +73,7 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                     sh '''
-                    echo "Deployment triggered via ArgoCD
+                    echo Deployment triggered via ArgoCD
                     '''
             }
         }
