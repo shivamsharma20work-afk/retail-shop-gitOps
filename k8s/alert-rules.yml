@@ -1,0 +1,58 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: retail-alerts
+  namespace: monitoring
+spec:
+  groups:
+    - name: retail.rules
+      rules:
+      # CPU HIGH USAGE ALERT
+        - alert: HighCPUUsage
+          expr: sum(rate(container_cpu_usage_seconds_total{namespace="retail-app"}[1m])) > 0.5
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU usage detected "
+            description: "CPU usage is above 50% for more than 1 minute in the retail-app namespace."
+
+      # POD DOWN ALERT
+        - alert: PodDown
+          expr: kube_pod_status_ready{namespace="retail-app", condition="true"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pod Down Alert"
+            description: "A pod in the retail-app namespace is down for more than 1 minute."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
