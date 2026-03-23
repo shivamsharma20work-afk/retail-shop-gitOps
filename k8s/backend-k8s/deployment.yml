@@ -17,7 +17,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: backend
-          image: 288096932508.dkr.ecr.ap-south-1.amazonaws.com/dockerimage-repo:backend-23
+          image: 288096932508.dkr.ecr.ap-south-1.amazonaws.com/dockerimage-repo:backend-24
           ports:
             - containerPort: 5001
           env:
