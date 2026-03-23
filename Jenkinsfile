@@ -61,7 +61,9 @@ pipeline {
                 sed -i "s|image:.*frontend.*|image : $IMAGE_FRONTEND|g" k8s/frontend-k8s/deployment.yml
                 sed -i "s|image:.*backend.*|image : $IMAGE_BACKEND|g" k8s/backend-k8s/deployment.yml
 
-                
+                echo "===== AFTER UPDATE ====="
+                cat k8s/frontend-k8s/deployment.yml
+                cat k8s/backend-k8s/deployment.yml
 
                 git config user.name "jenkins"
                 git config user.email "jenkins@example.com"
